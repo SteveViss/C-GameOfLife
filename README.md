@@ -3,7 +3,7 @@ C practice
 
 **Objective:** Reproduce the Game of Life cellurar automaton (Conway, 1970)
 
-**Quick description:** The universe of the Game of Life is an infinite two-dimensional orthogonal grid of square cells, each of which is in one of two possible states, alive or dead. Every cell interacts with its eight neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent. At each step in time, the following transitions occur:
+**Quick description:** The universe of the Game of Life is an infinite two-dimensional orthogonal grid of square cells, each of which is in one of two possible states, alive or dead. Every cell interacts with its eight neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent.
 
 **Rules:**
 
