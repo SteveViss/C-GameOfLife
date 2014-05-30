@@ -1,39 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "gol_output.h"
+
+#define numRows 100
+#define numCols 100
 
 /* Set global variables */
 
-main ()
+int main ()
 {
     int i,y;
-    int numRows, numCols;
-    numRows = numCols = 50;
-    int LastGrid [numRows][numCols];
-    int NewGrid [numRows][numCols];
+
+    int ** LastGrid = malloc(sizeof (int *) * numRows);
+    int ** NewGrid = malloc(sizeof (int *) * numRows);
+    //int LastGrid [numRows][numCols];
+    //int NewGrid [numRows][numCols];
     srand(time(NULL));
     int Nsimu;
 
-    Nsimu = 100;
+    Nsimu = 100000;
 
     /* Initi grid */
     for (i = 0; i<numCols;i++) {
+        LastGrid[i] = malloc(sizeof (int) * numCols);
+        NewGrid[i] = malloc(sizeof (int) * numCols);
         for (y = 0; y<numRows;y++) {
             long double val = rand()/((long double) RAND_MAX);
             if (val < 0.5)
                     LastGrid[i][y] = 0;
             else
                     LastGrid[i][y] = 1;
-            printf("LastGrid [%d][%d] = %d \n",i,y,LastGrid[i][y]);
+  //          printf("LastGrid [%d][%d] = %d \n",i,y,LastGrid[i][y]);
             NewGrid[i][y] = 0;
         }
     }
+    gol_disp_output (LastGrid, numRows, numCols);
 
     /* Run simu */
     int n;
 
     for (n = 0; n<Nsimu;n++) {
-        printf("Time step = %d",n);
+ //       printf("Time step = %d \n",n);
         /* Time step */
         for (i = 0; i<numCols;i++) {
             int ip = i + 1;
@@ -45,7 +53,7 @@ main ()
                 case 0:
                     im = numCols-1;
                     break;
-                case 49:
+                case numCols-1:
                     ip = 0;
                     break;
             }
@@ -58,9 +66,9 @@ main ()
 
                 switch(y){
                     case 0:
-                        ym = numCols-1;
+                        ym = numRows-1;
                         break;
-                    case 49:
+                    case numRows-1:
                         yp = 0;
                         break;
                 }
@@ -69,43 +77,63 @@ main ()
 
                 aliveCells = LastGrid[im][ym] + LastGrid[im][y]+ LastGrid[im][yp] + LastGrid[i][ym] + LastGrid[i][yp]+ LastGrid[ip][ym] + LastGrid[ip][y]+ LastGrid[ip][yp];
 
-                /* Rules 1*/
-                if (LastGrid[i][y] ==1 && aliveCells <= 2)
-                    NewGrid[i][y] = 0;
-                else
-                    NewGrid[i][y] = 1;
 
-                /* Rules 2*/
-                if (LastGrid[i][y] ==1 && aliveCells == 2 ||  LastGrid[i][y] ==1 && aliveCells == 3)
-                    NewGrid[i][y] = 1;
-                else
-                    NewGrid[i][y] = 1;
+                if (LastGrid[i][y] == 1) {
 
-                /* Rules 3*/
-                if (LastGrid[i][y] ==1 && aliveCells > 3)
-                    NewGrid[i][y] = 0;
-                else
-                    NewGrid[i][y] = 1;
+                    if (aliveCells < 2 || aliveCells >3){
 
-                /* Rules 4*/
-                if (LastGrid[i][y] == 0 && aliveCells == 3 )
-                    NewGrid[i][y] = 1;
-                else
-                    NewGrid[i][y] = 0;
+                        NewGrid[i][y] = 0;
+
+                    } else {NewGrid[i][y] = 1;}
+
+                } else if (aliveCells==3){
+
+                        NewGrid[i][y] = 1;
+
+                } else {NewGrid[i][y] = 0;}
+
+// Not working
+                // /* Rules 1*/
+                // if (LastGrid[i][y] ==1 && aliveCells <= 2)
+                    // NewGrid[i][y] = 0;
+                // else
+                    // NewGrid[i][y] = 1;
+//
+                // /* Rules 2*/
+                // if (LastGrid[i][y] ==1 && aliveCells == 2 ||  LastGrid[i][y] ==1 && aliveCells == 3)
+                    // NewGrid[i][y] = 1;
+                // else
+                    // NewGrid[i][y] = 1;
+//
+                // /* Rules 3*/
+                // if (LastGrid[i][y] ==1 && aliveCells > 3)
+                    // NewGrid[i][y] = 0;
+                // else
+                    // NewGrid[i][y] = 1;
+//
+                // /* Rules 4*/
+                // if (LastGrid[i][y] == 0 && aliveCells == 3 )
+                    // NewGrid[i][y] = 1;
+                // else
+                    // NewGrid[i][y] = 0;
 
                 }
             }
 
-
-            for (i = 0; i<numCols;i++) {
-                for (y = 0; y<numRows;y++) {
-                    LastGrid[i][y] = NewGrid[i][y] ;
-                }
-            }
+            int ** swGrid = LastGrid;
+            LastGrid = NewGrid;
+            NewGrid = swGrid;
+           gol_disp_output (LastGrid, numRows, numCols);
+//            for (i = 0; i<numCols;i++) {
+ //               for (y = 0; y<numRows;y++) {
+  //                  LastGrid[i][y] = NewGrid[i][y] ;
+ //               }
+ //           }
 
           /* END SIMU*/
 
         }
 
+    gol_disp_terminate();
     return 0;
 }
