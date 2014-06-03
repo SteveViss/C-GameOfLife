@@ -4,7 +4,7 @@
 #include "gol_output.h"
 
 #define numRows 100
-#define numCols 100
+#define numCols 150
 
 /* Set global variables */
 
@@ -12,29 +12,35 @@ int main ()
 {
     int i,y;
 
-    int ** LastGrid = malloc(sizeof (int *) * numRows);
-    int ** NewGrid = malloc(sizeof (int *) * numRows);
+    int ** LastGrid = malloc(sizeof (int *) * numCols);
+    int ** NewGrid = malloc(sizeof (int *) * numCols);
     //int LastGrid [numRows][numCols];
     //int NewGrid [numRows][numCols];
     srand(time(NULL));
     int Nsimu;
 
-    Nsimu = 100000;
+    Nsimu = 1;
 
     /* Initi grid */
     for (i = 0; i<numCols;i++) {
-        LastGrid[i] = malloc(sizeof (int) * numCols);
-        NewGrid[i] = malloc(sizeof (int) * numCols);
+
+        LastGrid[i] = malloc(sizeof (int) * numRows);
+        NewGrid[i] = malloc(sizeof (int) * numRows);
+
         for (y = 0; y<numRows;y++) {
+
             long double val = rand()/((long double) RAND_MAX);
+
+
             if (val < 0.5)
-                    LastGrid[i][y] = 0;
+                    LastGrid[i][y] = NewGrid[i][y]  =0;
             else
-                    LastGrid[i][y] = 1;
+                    LastGrid[i][y] = NewGrid[i][y]  = 1;
   //          printf("LastGrid [%d][%d] = %d \n",i,y,LastGrid[i][y]);
-            NewGrid[i][y] = 0;
+
         }
     }
+
     gol_disp_output (LastGrid, numRows, numCols);
 
     /* Run simu */
@@ -92,31 +98,6 @@ int main ()
 
                 } else {NewGrid[i][y] = 0;}
 
-// Not working
-                // /* Rules 1*/
-                // if (LastGrid[i][y] ==1 && aliveCells <= 2)
-                    // NewGrid[i][y] = 0;
-                // else
-                    // NewGrid[i][y] = 1;
-//
-                // /* Rules 2*/
-                // if (LastGrid[i][y] ==1 && aliveCells == 2 ||  LastGrid[i][y] ==1 && aliveCells == 3)
-                    // NewGrid[i][y] = 1;
-                // else
-                    // NewGrid[i][y] = 1;
-//
-                // /* Rules 3*/
-                // if (LastGrid[i][y] ==1 && aliveCells > 3)
-                    // NewGrid[i][y] = 0;
-                // else
-                    // NewGrid[i][y] = 1;
-//
-                // /* Rules 4*/
-                // if (LastGrid[i][y] == 0 && aliveCells == 3 )
-                    // NewGrid[i][y] = 1;
-                // else
-                    // NewGrid[i][y] = 0;
-
                 }
             }
 
@@ -124,11 +105,6 @@ int main ()
             LastGrid = NewGrid;
             NewGrid = swGrid;
            gol_disp_output (LastGrid, numRows, numCols);
-//            for (i = 0; i<numCols;i++) {
- //               for (y = 0; y<numRows;y++) {
-  //                  LastGrid[i][y] = NewGrid[i][y] ;
- //               }
- //           }
 
           /* END SIMU*/
 
